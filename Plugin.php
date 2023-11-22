@@ -3,7 +3,6 @@
 namespace EditOpportunityType;
 
 use EditOpportunityType\Controllers\EditOpportunityType;
-use EditOpportunityType\Repositories\EvaluationMethodConfiguration;
 use MapasCulturais\App;
 
 class Plugin extends \MapasCulturais\Plugin
@@ -12,20 +11,22 @@ class Plugin extends \MapasCulturais\Plugin
     {
         $app = App::i();
         $app->hook('template(opportunity.edit.registration-config):after', function () use($app) {
-            $eval = $app->repo('EvaluationMethodConfiguration')->findAll();
+            $queryResult = $app->getEm()->getConnection()->fetchAll('SELECT DISTINCT "type" "type" FROM evaluation_method_configuration');
 
-            $opportunityTypes = array_map("unserialize",array_unique(array_map("serialize",array_map(function($evaluation) {
-                return [$evaluation->getType()->id, $evaluation->getType()->name];
-                }, $eval))));
+            $opportunityTypes = array_map(function ($row) use ($app) {
+                $evaluationMethods = $app->getRegisteredEvaluationMethodBySlug($row['type']);
+                return [$evaluationMethods->slug, $evaluationMethods->name];
+            }, $queryResult);
 
-            $id = $this->data["entity"]->evaluationMethodConfiguration->getType();
+            $currentType = $this->data["entity"]->evaluationMethodConfiguration->getType();
 
+            $app->view->enqueueStyle('app', 'editOpportunityType', 'EditOpportunityType/css/main.css');
             $app->view->part('select-opportunity-type', [
                 'opportunityTypes' => $opportunityTypes,
-                'id' => $id
+                'currentType' => $currentType
             ]);
 
-            $app->view->enqueueScript('app', 'editOpportunityType', 'js/editOpportunityType.js');
+            $app->view->enqueueScript('app', 'editOpportunityType', 'EditOpportunityType/js/editOpportunityType.js');
         });
 
     }
