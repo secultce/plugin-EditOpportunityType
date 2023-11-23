@@ -1,17 +1,32 @@
 <?php
-use \MapasCulturais\i;
+
+/**
+ * @var string[] $opportunityTypes
+ * @var string[] $currentType
+ * @var int $opportunityId
+ */
+
+use MapasCulturais\i;
+
 ?>
-<div class="registration-fieldset">
-    <h4>Alterar tipo de Avaliação</h4>
-    <select type="text" id="opportunityType">
+<section class="registration-fieldset">
+    <label for="opportunityType">
+        <h4>Alterar tipo de Avaliação</h4>
+    </label>
+    <select id="opportunityType">
         <?php foreach ($opportunityTypes as $type) { ?>
-            <option value="<?= $type[0] ?>" <?= $type[0] === $currentType->id ?? 'selected' ?>><?= $type[1] ?></option>
+            <option
+                    value="<?= $type[0] ?>"
+                    <?= $type[0] === $currentType->id ? 'selected' : '' ?>
+                    <?= $type[0] !== 'technical' ? 'disabled' : '' ?>
+            ><?= $type[1] ?></option>
         <?php } ?>
     </select>
+    <input type="hidden" id="opportunityId" value=<?= $opportunityId ?>>
 
     <a class="btn btn-primary js-open-dialog" href="javascript:void(0)"
        data-dialog-block="true" data-dialog="#dialog-confirm-change" data-dialog-callback="MapasCulturais.addEntity"
-       data-form-action='insert' data-dialog-title="<?php \MapasCulturais\i::esc_attr_e('Modal de Entidade'); ?>"
+       data-form-action='insert' data-dialog-title="<?php i::esc_attr_e('Modal de Entidade'); ?>"
        id="editTypeConfirm"
     >Confirmar alteração</a>
 
@@ -26,4 +41,4 @@ use \MapasCulturais\i;
             <button class="js-close btn btn--secondary">Cancelar</button>
         </div>
     </div>
-</div>
+</section>
