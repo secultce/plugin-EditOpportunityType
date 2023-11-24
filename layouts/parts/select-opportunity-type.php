@@ -25,8 +25,7 @@ use MapasCulturais\i;
     <input type="hidden" id="opportunityId" value=<?= $opportunityId ?>>
 
     <a class="btn btn-primary js-open-dialog" href="javascript:void(0)"
-       data-dialog-block="true" data-dialog="#dialog-confirm-change" data-dialog-callback="MapasCulturais.addEntity"
-       data-form-action='insert' data-dialog-title="<?php i::esc_attr_e('Modal de Entidade'); ?>"
+       data-dialog-block="true" data-dialog="#dialog-confirm-change"
        id="editTypeConfirm"
     >Confirmar alteração</a>
 

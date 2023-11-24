@@ -1,8 +1,12 @@
 $(document).ready(() => {
+    $('#editTypeConfirm').on('click', () => {
+        $('#newOpportunityTypeShow').text($('#opportunityType option:selected')[0].innerText)
+    })
+
     $('#dialog-confirm-change button.js-close').on('click', e => {
         if(e.target.value) {
             const newOpportunityType = $('#opportunityType').val();
-            const opportunityId = $('#opportunityId').val();
+            const opportunityId = $('#opportunityId').val()
 
             fetch(MapasCulturais.baseURL + 'alterar-tipo-de-oportunidade', {
                 method: 'POST',
@@ -12,20 +16,20 @@ $(document).ready(() => {
                 }
             })
                 .then(response => response.json())
-                .then(data => {
-                    console.log(data)
+                .then(json => {
+                    if(json.error) {
+                        MapasCulturais.Messages.error(json.data.message)
+                    } else {
+                        MapasCulturais.Messages.success(json.message)
+                        document.location.reload()
+                    }
                 })
-                .catch(() => {})
-
-            // $.ajax({
-            //     url: MapasCulturais.baseURL + 'alterar-tipo-de-oportunidade',
-            //     dataType: 'json',
-            //     data: {newOpportunityType},
-            //     method: 'POST'
-            // })
-            //     .done(data => {
-            //         console.log(data)
-            //     })
+                .catch(e => MapasCulturais.Messages.error('Erro inesperado'))
         }
     })
+
+    $('#opportunityType').on('change', () => {
+        $('#editTypeConfirm').style.pointerEvents = 'initial'
+    })
+
 })

@@ -35,6 +35,7 @@ class Plugin extends \MapasCulturais\Plugin
             $opportunityId = $this->data["entity"]->id;
 
             $app->view->enqueueStyle('app', 'editOpportunityType', 'EditOpportunityType/css/main.css');
+
             $app->view->part('select-opportunity-type', [
                 'opportunityTypes' => $opportunityTypes,
                 'currentType' => $currentType,
