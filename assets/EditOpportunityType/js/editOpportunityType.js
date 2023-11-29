@@ -1,9 +1,16 @@
 $(document).ready(() => {
-    $('#editTypeConfirm').on('click', () => {
+    const buttonEditType = document.getElementById('buttonEditType');
+
+    $('#buttonEditType').on('click', () => {
         $('#newOpportunityTypeShow').text($('#opportunityType option:selected')[0].innerText)
     })
 
     $('#dialog-confirm-change button.js-close').on('click', e => {
+        const buttonEditType = document.getElementById('buttonEditType')
+        buttonEditType.innerHTML = '<img src="' + MapasCulturais.spinnerURL + '" />'
+        buttonEditType.style.pointerEvents = 'none'
+        buttonEditType.classList.add('disabled')
+
         if(e.target.value) {
             const newOpportunityType = $('#opportunityType').val();
             const opportunityId = $('#opportunityId').val()
@@ -29,7 +36,8 @@ $(document).ready(() => {
     })
 
     $('#opportunityType').on('change', () => {
-        $('#editTypeConfirm').style.pointerEvents = 'initial'
+        buttonEditType.style.pointerEvents = 'initial'
+        buttonEditType.classList.remove('disabled')
     })
 
 })

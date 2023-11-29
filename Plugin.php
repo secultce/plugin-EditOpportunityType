@@ -47,6 +47,9 @@ class Plugin extends \MapasCulturais\Plugin
 
     }
 
+    /**
+     * @throws \Exception
+     */
     function register()
     {
         $app = App::i();

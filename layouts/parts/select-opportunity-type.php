@@ -24,9 +24,9 @@ use MapasCulturais\i;
     </select>
     <input type="hidden" id="opportunityId" value=<?= $opportunityId ?>>
 
-    <a class="btn btn-primary js-open-dialog" href="javascript:void(0)"
+    <a class="btn btn-primary js-open-dialog disabled" href="javascript:void(0)"
        data-dialog-block="true" data-dialog="#dialog-confirm-change"
-       id="editTypeConfirm"
+       id="buttonEditType"
     >Confirmar alteração</a>
 
     <div id="dialog-confirm-change" class="js-dialog" style="z-index:1901">
