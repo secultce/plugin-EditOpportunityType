@@ -24,10 +24,12 @@ class Plugin extends \MapasCulturais\Plugin
                 return;
             }
 
-            $queryResult = $app->getEm()->getConnection()->fetchAll('SELECT DISTINCT "type" "type" FROM evaluation_method_configuration');
+            $queryResult = $app->em
+                ->createQuery('SELECT DISTINCT emc._type FROM MapasCulturais\Entities\EvaluationMethodConfiguration emc')
+                ->getArrayResult();
 
             $opportunityTypes = array_map(function ($row) use ($app) {
-                $evaluationMethods = $app->getRegisteredEvaluationMethodBySlug($row['type']);
+                $evaluationMethods = $app->getRegisteredEvaluationMethodBySlug($row['_type']);
                 return [$evaluationMethods->slug, $evaluationMethods->name];
             }, $queryResult);
 
