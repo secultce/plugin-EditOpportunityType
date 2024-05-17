@@ -11,7 +11,7 @@ class Plugin extends \MapasCulturais\Plugin
     {
         $app = App::i();
 
-        $app->hook('template(opportunity.edit.registration-config):after', function () use($app) {
+        $app->hook('template(opportunity.edit.evaluations-config):begin', function () use($app) {
             if($this->data['entity']->evaluationMethodConfiguration->getType()->id !== 'documentary') {
                 return;
             }
