@@ -12,15 +12,15 @@ class Plugin extends \MapasCulturais\Plugin
         $app = App::i();
 
         $app->hook('template(opportunity.edit.evaluations-config):begin', function () use($app) {
-            if($this->data['entity']->evaluationMethodConfiguration->getType()->id !== 'documentary') {
-                return;
-            }
-
-            if(!$app->user->isUserAdmin($app->getUser())) {
-                return;
-            }
-
-            if($this->data['entity']->publishedRegistrations) {
+            /**
+             * @var $opportunity MapasCulturais\Entities\Opportunity
+             */
+            $opportunity = $this->data['entity'];
+            if(
+                $opportunity->evaluationMethodConfiguration->getType()->id !== 'documentary'
+                || !$opportunity->canUser('@control')
+                || $opportunity->publishedRegistrations
+            ) {
                 return;
             }
 
@@ -31,8 +31,8 @@ class Plugin extends \MapasCulturais\Plugin
                 return [$evaluationMethods->slug, $evaluationMethods->name];
             }, $queryResult);
 
-            $currentType = $this->data["entity"]->evaluationMethodConfiguration->getType();
-            $opportunityId = $this->data["entity"]->id;
+            $currentType = $opportunity->evaluationMethodConfiguration->getType();
+            $opportunityId = $opportunity->id;
 
             $app->view->enqueueStyle('app', 'editOpportunityType', 'EditOpportunityType/css/main.css');
 
