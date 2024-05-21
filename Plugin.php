@@ -11,28 +11,30 @@ class Plugin extends \MapasCulturais\Plugin
     {
         $app = App::i();
 
-        $app->hook('template(opportunity.edit.registration-config):after', function () use($app) {
-            if($this->data['entity']->evaluationMethodConfiguration->getType()->id !== 'documentary') {
+        $app->hook('template(opportunity.edit.evaluations-config):begin', function () use($app) {
+            /**
+             * @var $opportunity MapasCulturais\Entities\Opportunity
+             */
+            $opportunity = $this->data['entity'];
+            if(
+                $opportunity->evaluationMethodConfiguration->getType()->id !== 'documentary'
+                || !$opportunity->canUser('@control')
+                || $opportunity->publishedRegistrations
+            ) {
                 return;
             }
 
-            if(!$app->user->isUserAdmin($app->getUser())) {
-                return;
-            }
-
-            if($this->data['entity']->publishedRegistrations) {
-                return;
-            }
-
-            $queryResult = $app->getEm()->getConnection()->fetchAll('SELECT DISTINCT "type" "type" FROM evaluation_method_configuration');
+            $queryResult = $app->em
+                ->createQuery('SELECT DISTINCT emc._type FROM MapasCulturais\Entities\EvaluationMethodConfiguration emc')
+                ->getArrayResult();
 
             $opportunityTypes = array_map(function ($row) use ($app) {
-                $evaluationMethods = $app->getRegisteredEvaluationMethodBySlug($row['type']);
+                $evaluationMethods = $app->getRegisteredEvaluationMethodBySlug($row['_type']);
                 return [$evaluationMethods->slug, $evaluationMethods->name];
             }, $queryResult);
 
-            $currentType = $this->data["entity"]->evaluationMethodConfiguration->getType();
-            $opportunityId = $this->data["entity"]->id;
+            $currentType = $opportunity->evaluationMethodConfiguration->getType();
+            $opportunityId = $opportunity->id;
 
             $app->view->enqueueStyle('app', 'editOpportunityType', 'EditOpportunityType/css/main.css');
 
