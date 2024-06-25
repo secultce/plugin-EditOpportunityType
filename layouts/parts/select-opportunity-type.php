@@ -14,17 +14,17 @@ use MapasCulturais\i;
         <h4>Alterar tipo de Avaliação</h4>
     </label>
     <select id="opportunityType">
-        <?php foreach ($opportunityTypes as $type) { ?>
-            <option
+        <?php foreach ($opportunityTypes as $type) {
+            if ($type[0] !== 'technical') continue; ?>
+                <option
                     value="<?= $type[0] ?>"
                     <?= $type[0] === $currentType->id ? 'selected' : '' ?>
-                    <?= $type[0] !== 'technical' ? 'disabled' : '' ?>
             ><?= $type[1] ?></option>
         <?php } ?>
     </select>
     <input type="hidden" id="opportunityId" value=<?= $opportunityId ?>>
 
-    <a class="btn btn-primary js-open-dialog disabled" href="javascript:void(0)"
+    <a class="btn btn-primary js-open-dialog" href="javascript:void(0)"
        data-dialog-block="true" data-dialog="#dialog-confirm-change"
        id="buttonEditType"
     >Confirmar alteração</a>
